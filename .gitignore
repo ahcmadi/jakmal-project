@@ -6,3 +6,4 @@
 .editorconfig
 /database/database.sqlite
 /storage/cache
+/.env
