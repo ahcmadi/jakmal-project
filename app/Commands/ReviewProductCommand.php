@@ -32,6 +32,31 @@ class ReviewProductCommand extends Command
     public function handle()
     {
         $productId = $this->argument('productId');
+        
+        $prodRepo = new ProductRepository();
+        $reviewRepo = new ReviewRepository();
+        
+        $prodReviewservice = new ProductReviewService($prodRepo, $reviewRepo, "cacheid");
+        $productReview = $prodReviewservice->getProductReview($productId);
+
+        $aggregrate = $productReview->getAgragrate();
+        $each_view = $aggregrate['count_each_review'];
+        
+        $result = [
+            'total_reviews'=> $aggregrate['count'],
+            'average_ratings'=> round($aggregrate['avg'], 1),
+        ];
+        foreach ($each_view as $view => $value) {
+            $result[$view.'_star'] = $value['count'];
+        }
+        krsort($result);
+        $this->info(collect($result)->toJson());
+        
+    }
+
+    public function OldHandle()
+    {
+        $productId = $this->argument('productId');
         $this->info('Getting Data Review of product #'.$productId);
         
         $prodRepo = new ProductRepository();
@@ -40,19 +65,14 @@ class ReviewProductCommand extends Command
         $prodReviewservice = new ProductReviewService($prodRepo, $reviewRepo, "cacheid");
 
         $productReview = $prodReviewservice->getProductReview($productId);
-        // $this->info('Product Id'."#".$productReview->getId());
-        // $this->info("Name \t: ".$productReview->getName()."\t Price \t: ".$productReview->getPrice() );
-        // $aggregrate = $productReview->getAgragrate();
-        // $this->info("Count \t: ".$aggregrate['count']."\t\t Avg\t: ".$aggregrate['avg'] );
-        // $each_view = $aggregrate['count_each_review'];
-        // foreach ($each_view as $view => $value) {
-        //     $this->info("Rate #".$view." : ".$value['count']." rows" );
-        // }
         $isFromCached = $prodReviewservice->isFromCache();
+
         if ($isFromCached) {
             $this->info(">>>>>>>>>>> loading data from cache " );
         }
+
         $this->printProductReview($productReview);
         
     }
+
 }

@@ -19,4 +19,20 @@ trait traitCommandPrint {
         $this->info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>" );
 
     }
+    public function printProductReviewAsJson(Product $productReview) {
+
+        $aggregrate = $productReview->getAgragrate();
+        $each_view = $aggregrate['count_each_review'];
+        
+        $result = [
+            'total_reviews'=> $aggregrate['count'],
+            'average_ratings'=> round($aggregrate['avg'], 1),
+        ];
+        foreach ($each_view as $view => $value) {
+            $result[$view.'_star'] = $value['count'];
+        }
+        krsort($result);
+        $this->info(collect($result)->toJson());
+
+    }
 }

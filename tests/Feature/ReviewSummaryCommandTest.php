@@ -16,11 +16,11 @@ class ReviewSummaryCommandTest extends TestCase
         $output = [
             'total_reviews'   => 500,
             'average_ratings' => 2.9,
-            '5_star'          => 62,
-            '4_star'          => 117,
-            '3_star'          => 126,
-            '2_star'          => 123,
-            '1_star'          => 72,
+            '5_star'          => 52,
+            '4_star'          => 127,
+            '3_star'          => 120,
+            '2_star'          => 135,
+            '1_star'          => 66,
         ];
         $result = $this->artisan('review:summary');
         $result->expectsOutput(collect($output)->toJson());

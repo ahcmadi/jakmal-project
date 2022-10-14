@@ -5,6 +5,7 @@ namespace App\Commands;
 use App\Models\ProductRepository;
 use App\Models\ReviewRepository;
 use App\Services\ProductReviewService;
+use App\Services\ReviewSummaryService;
 use LaravelZero\Framework\Commands\Command;
 
 class ReviewSummaryCommand extends Command
@@ -31,13 +32,19 @@ class ReviewSummaryCommand extends Command
      */
     public function handle()
     {
-        $this->info('Getting Data Summary list of product review.');
-        
         $prodRepo = new ProductRepository();
         $reviewRepo = new ReviewRepository();
+        $summaryService = new ReviewSummaryService($prodRepo, $reviewRepo, "cacheid");
+        $result = $summaryService->getReviewSummary();
+        $this->info(collect($result)->toJson());
+        
+    }
 
+    public function oldHandle()
+    {
+        $prodRepo = new ProductRepository();
+        $reviewRepo = new ReviewRepository();
         $prodReviewservice = new ProductReviewService($prodRepo, $reviewRepo, "cacheid");
-        /* $prodReviewservice->findByProduct(Product $product) */
         $productsReviews = $prodReviewservice->getReviewSummary();
         $isFromCached = $prodReviewservice->isFromCache();
         if ($isFromCached) {

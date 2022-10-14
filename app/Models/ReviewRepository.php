@@ -15,9 +15,11 @@ class ReviewRepository  implements RepositoryInterface
         return $product;
     }
 
-    public function findByProducts(Array $products) : array
+    public function findByProducts(Array $products)
     {
-      return [];
+        $reviewRows = [];
+        $reviewRows = DB::table('review')->whereIn('product_id', $products)->get();
+        return $reviewRows;
     }
     
 

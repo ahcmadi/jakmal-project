@@ -22,7 +22,8 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "mockery/mockery": "dev-master@dev"
     },
     "autoload": {
         "psr-4": {
